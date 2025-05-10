@@ -1,4 +1,3 @@
-import { Prisma } from "../generated/prisma";
 import axios from "axios";
 import { config } from "dotenv";
 config();
@@ -7,7 +6,7 @@ const INVENTORY_SERVICE_URL = process.env.INVENTORY_SERVICE_URL;
 import { Request, Response, NextFunction } from "express";
 import prisma from "../prisma";
 
-export const createProduct = async (
+const createProduct = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -42,8 +41,25 @@ export const createProduct = async (
             data: parsedBody.data
         });
 
-        const { data: inventory } = await axios.post(`${INVENTORY_SERVICE_URL}`)
+        const { data: inventory } = await axios.post(`${INVENTORY_SERVICE_URL}/inventory`, {
+            productId: product.id,
+            sku: product.sku
+        });
+
+        // update product and store inventory id
+        await prisma.product.update({
+            where: { id: product.id },
+            data: {
+                inventoryId: inventory.id
+            }
+        });
+
+        res.status(201).json({ ...product, inventoryId: inventory.id });
+        return;
     } catch (error) {
-        
+        console.log(error);
+        res.status(500).json(error);
     }
 }
+
+export default createProduct;
