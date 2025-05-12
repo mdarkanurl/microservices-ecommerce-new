@@ -23,7 +23,7 @@ const getProductHistory = async (
 
         if(product.inventoryId === null) {
             const { data: inventory } = await axios.post(
-                `${INVENTORY_SERVICE_URL}/inventory`,
+                `${INVENTORY_SERVICE_URL}/inventories`,
                 {
                     productId: product.id,
                     sku: product.sku
@@ -47,7 +47,7 @@ const getProductHistory = async (
         }
 
         const { data: inventory } = await axios.get(
-            `${INVENTORY_SERVICE_URL}/inventory/${product.inventoryId}`
+            `${INVENTORY_SERVICE_URL}/inventories/${product.inventoryId}`
         );
 
         res.status(200).json({

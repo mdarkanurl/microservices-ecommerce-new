@@ -41,7 +41,7 @@ const createProduct = async (
             data: parsedBody.data
         });
 
-        const { data: inventory } = await axios.post(`${INVENTORY_SERVICE_URL}/inventory`, {
+        const { data: inventory } = await axios.post(`${INVENTORY_SERVICE_URL}/inventories`, {
             productId: product.id,
             sku: product.sku
         });
