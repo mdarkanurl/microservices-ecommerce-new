@@ -4,3 +4,4 @@ node_modules
 .vscode
 src/services/inventory/src/generated
 src/services/product/src/generated
+src/services/user/src/generated
