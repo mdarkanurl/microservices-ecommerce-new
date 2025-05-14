@@ -17,7 +17,10 @@ const createHandler = (hostname: string, path: string, method: string) => {
             const { data } = await axios({
                 method,
                 url,
-                data: req.body
+                data: req.body,
+                headers: {
+                    origin: 'http"//localhost:3000'
+                }
             });
 
             res.json(data);
