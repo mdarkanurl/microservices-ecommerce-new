@@ -6,3 +6,4 @@ src/services/inventory/src/generated
 src/services/product/src/generated
 src/services/user/src/generated
 src/services/auth/src/generated
+src/services/email/src/generated
