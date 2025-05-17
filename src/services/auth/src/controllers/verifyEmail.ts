@@ -34,7 +34,7 @@ const verifyEmail = async (
         // find the verification code
         const verificationCode = await prisma.verificationCode.findFirst({
             where: {
-                id: user.id,
+                userId: user.id,
                 code: parseBody.data.code
             }
         });
@@ -64,9 +64,9 @@ const verifyEmail = async (
 
         // send success email
         await axios.post(`${process.env.EMAIL_SERVICE_URL}/emails/send`, {
-            to: user.email,
+            recipient: user.email,
             subject: 'Email verified',
-            text: 'Your email has been verified successfully',
+            body: 'Your email has been verified successfully',
             source: 'verify-email'
         });
 

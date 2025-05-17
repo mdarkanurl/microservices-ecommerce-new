@@ -29,6 +29,53 @@
                     "methods": ["get"]
                 }
             ]
+        },
+        "user": {
+            "url": "http://localhost:3003",
+            "routes": [
+                {
+                    "path": "/users",
+                    "methods": ["post"]
+                },
+                {
+                    "path": "/users/:id",
+                    "methods": ["get"]
+                }
+            ]
+        },
+        "auth": {
+            "url": "http://localhost:3004",
+            "routes": [
+                {
+                    "path": "/auth/register",
+                    "methods": ["post"]
+                },
+                {
+                    "path": "/auth/login",
+                    "methods": ["post"]
+                },
+                {
+                    "path": "/auth/verify-token",
+                    "methods": ["post"]
+                },
+                {
+                    "path": "/auth/verify-email",
+                    "methods": ["post"]
+                }
+            ]
+        },
+        "email": {
+            "url": "http://localhost:3005",
+            "routes": [
+                {
+                    "path": "/emails/send",
+                    "methods": ["post"]
+                },
+                {
+                    "path": "/emails",
+                    "methods": ["get"]
+                }
+            ]
         }
     }
 }

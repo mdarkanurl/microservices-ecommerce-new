@@ -21,7 +21,7 @@ const sendEmail = async (
         // create mail option
         const { sender, recipient, subject, body, source } = parseBody.data;
         const from = sender || DEFAULT_SENDER_EMAIL;
-        await sendEmailFunc(from, recipient, subject, body);
+        await sendEmailFunc(recipient, subject, body);
 
         // send the email
         await prisma.email.create({

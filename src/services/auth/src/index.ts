@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // });
 
 // Router
-app.post('/auth/registration', userRegistration);
+app.post('/auth/register', userRegistration);
 app.post('/auth/login', userLogin);
 app.post('/auth/verify-token', verifyToken);
 app.post('/auth/verify-email', verifyEmail);

@@ -77,7 +77,7 @@ const userRegistration = async (
             source: 'user-registration'
         });
 
-        res.status(201).json(user);
+        res.status(201).json({ message: 'User is created', user });
         return;
     } catch (error) {
         next(error);

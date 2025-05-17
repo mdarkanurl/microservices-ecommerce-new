@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Router
 app.post('/emails/send', sendEmail);
-app.post('/emails', getEmails);
+app.get('/emails', getEmails);
 
 app.listen(process.env.PORT, () => {
     console.log(`http://localhost:${process.env.PORT}`);
