@@ -1,6 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
-import { userLogin, userRegistration, verifyToken } from "./controllers";
+import { userLogin, userRegistration, verifyEmail, verifyToken } from "./controllers";
 
 const app = express();
 config();
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/auth/registration', userRegistration);
 app.post('/auth/login', userLogin);
 app.post('/auth/verify-token', verifyToken);
+app.post('/auth/verify-email', verifyEmail);
 
 app.listen(process.env.PORT, () => {
     console.log(`http://localhost:${process.env.PORT}`);

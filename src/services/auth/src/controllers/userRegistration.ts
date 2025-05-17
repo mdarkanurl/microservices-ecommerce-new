@@ -4,6 +4,7 @@ import prisma from "../prisma";
 import { UserCreateSchema } from "../schemas";
 import axios from "axios";
 import dotenv from "dotenv";
+import { generateVerificationCode } from "../utils";
 dotenv.config();
 
 const userRegistration = async (
@@ -56,6 +57,24 @@ const userRegistration = async (
             authUserId: user.id,
             name: user.name,
             email: user.email
+        });
+
+        // generate verification code
+        const code = generateVerificationCode();
+        await prisma.verificationCode.create({
+            data: {
+                userId: user.id,
+                code,
+                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24)
+            }
+        });
+
+        // send verification email
+        await axios.post(`${process.env.EMAIL_SERVICE_URL}/emails/send`, {
+            recipient: user.email,
+            subject: 'Email verification',
+            body: `Your code is ${code}`,
+            source: 'user-registration'
         });
 
         res.status(201).json(user);

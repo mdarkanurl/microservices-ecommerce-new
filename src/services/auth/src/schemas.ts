@@ -14,3 +14,8 @@ export const UserLoginSchema = z.object({
 export const accessTokenSchema = z.object({
     accessToken: z.string()
 });
+
+export const emailVerificationSchema = z.object({
+    email: z.string().email(),
+    code: z.string()
+});
