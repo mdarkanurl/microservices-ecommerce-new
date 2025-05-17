@@ -1,5 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
+import { getEmails, sendEmail } from "./controllers";
 
 const app = express();
 config();
@@ -22,6 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 // });
 
 // Router
+app.post('/emails/send', sendEmail);
+app.post('/emails', getEmails);
 
 app.listen(process.env.PORT, () => {
     console.log(`http://localhost:${process.env.PORT}`);

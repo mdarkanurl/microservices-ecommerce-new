@@ -16,6 +16,7 @@ datasource db {
 
 model Email {
   id String @id @default(cuid())
+  sender String
   recipient String
   subject String
   body String
