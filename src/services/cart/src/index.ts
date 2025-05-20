@@ -3,6 +3,8 @@ import { config } from "dotenv";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import { addToCart, getMyCart } from './controllers';
+import './events/onKeyExpires';
 
 config();
 
@@ -28,9 +30,13 @@ app.use('/api', limiter);
 app.use(morgan('dev'));
 app.use(express.json());
 
+// routes
+app.post('/cart/add-to-cart', addToCart);
+app.get('/cart/my-cart', getMyCart);
+
 // health check
 app.get('/api/health', (_req: Request, res: Response) => {
-    res.json({ message: 'API Gateway is running' });
+    res.json({ message: 'API is running' });
 });
 
 app.use((err: ErrorRequestHandler, _req: Request, res: any, _next: NextFunction) => {
@@ -40,5 +46,5 @@ app.use((err: ErrorRequestHandler, _req: Request, res: any, _next: NextFunction)
 
 const PORT = process.env.PORT || 4006;
 app.listen(PORT, () => {
-    console.log(`API Gateway is running on port ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });
