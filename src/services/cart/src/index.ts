@@ -3,12 +3,14 @@ import { config } from "dotenv";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { addToCart, getMyCart } from './controllers';
-import './events/onKeyExpires';
+// import './events/onKeyExpires';
 
 config();
 
 const app = express();
+app.use(cookieParser())
 
 // security middleware
 app.use(helmet());

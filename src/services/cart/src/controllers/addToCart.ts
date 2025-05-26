@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { cartItemSchema } from "../schema";
 import { v4 as uuid } from "uuid";
 import redis from "../redis";
-import { CART_TTL, INVENTORY_SERVICE_URL } from "../config";
-import axios from "axios";
+// import { CART_TTL, INVENTORY_SERVICE_URL } from "../config";
+// import axios from "axios";
 
 const addToCart = async (
     req: Request,
@@ -17,47 +17,29 @@ const addToCart = async (
             return;
         }
 
-        let cartSessionId = (req.headers['x-cart-session-id'] as string) || null;
+        let userId = (req.cookies.userId as string) || null;
 
-		
-        if(cartSessionId) {
-            const exists = await redis.exists(`sessions:${cartSessionId}`);
+        if(!userId) {
+            userId = uuid();
 
-            if(exists === 0) {
-                cartSessionId = null;
-            }
+            // set the session id to cookie
+            res.cookie('guest-user-id', userId);
         }
 
-        if(!cartSessionId) {
-            cartSessionId = uuid();
-            
-            // set the session id to redis
-            await redis.setex(`sessions:${cartSessionId}`, CART_TTL, cartSessionId);
-
-            // set the session id to response header
-            res.setHeader('x-cart-session-id', cartSessionId);
-        }
-
-        // check if the inventory is available
-        const { data } = await axios.get(`${INVENTORY_SERVICE_URL}/inventory/${parsedBody.data.inventoryId}`);
-        if(Number(data.quantity) < parsedBody.data.quantity) {
-            res.status(400).json({ message: 'Inventory not available' });
-            return;
+        const cartData = {
+            items: [
+                {
+                    productId: parsedBody.data.productId, inventoryId: parsedBody.data.inventoryId, quantity: 2
+                }
+            ],
+            userId: userId
         };
 
-        // add item to the cart
-        await redis.hset(`cart:${cartSessionId}`, parsedBody.data.productId, JSON.stringify({
-            inventoryId: parsedBody.data.inventoryId,
-            quantity: parsedBody.data.quantity,
-        }));
-
-        // update inventory
-        await axios.put(`${INVENTORY_SERVICE_URL}/inventories/${parsedBody.data.inventoryId}`, {
-            quantity: parsedBody.data.quantity,
-            actionType: "OUT"
+        await redis.set(`guest-user-id:${userId}`, JSON.stringify(cartData), {
+            EX: 60
         });
-
-        res.status(201).json({ message: 'Item added to cart', cartSessionId });
+        
+        res.status(201).json({ message: 'Item added to cart', userId });
         return;
     } catch (error) {
         next(error);

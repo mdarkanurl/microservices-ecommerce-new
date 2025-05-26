@@ -1,9 +1,5 @@
-import { Redis } from "ioredis";
-import { REDIS_HOST, REDIS_PORT } from "./config";
-
-const redis = new Redis({
-    host: REDIS_HOST,
-    port: REDIS_PORT
-});
+import { createClient } from "redis";
+const redis = createClient();
+redis.connect().catch(console.error);
 
 export default redis;

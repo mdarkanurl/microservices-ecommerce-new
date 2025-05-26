@@ -1,14 +1,11 @@
-import { Redis } from "ioredis";
-import { REDIS_HOST, REDIS_PORT } from "../config";
+import { createClient } from "redis";
 
-const redis = new Redis({
-    host: REDIS_HOST,
-    port: REDIS_PORT
-});
+const redis = createClient();
+redis.connect().catch(console.error);
 
 const CHANNEL_KEY = "__keyevent@0__:expired";
 redis.config('SET', 'notify-keyspace-events', 'Ex');
-redis.subscribe(CHANNEL_KEY);
+redis.subscribe;
 
 redis.on('message', async (ch, message) => {
     if(ch === CHANNEL_KEY) {
