@@ -15,8 +15,8 @@ datasource db {
 }
 
 model Cart {
-  idUn String @id @default(cuid())
-  id String
+  id String @id @default(cuid())
+  idUn String
   productId String
   inventoryId String
   quantity Int

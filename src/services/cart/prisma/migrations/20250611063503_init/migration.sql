@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Cart" (
     "id" TEXT NOT NULL,
+    "idUn" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
     "inventoryId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,

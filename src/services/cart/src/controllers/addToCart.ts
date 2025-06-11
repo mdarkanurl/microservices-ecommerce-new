@@ -39,7 +39,7 @@ const addToCart = async (
 
         await prisma.cart.create({
             data: {
-                id: userId,
+                idUn: userId,
                 productId: parsedBody.data.productId,
                 inventoryId: parsedBody.data.inventoryId,
                 quantity: parsedBody.data.quantity

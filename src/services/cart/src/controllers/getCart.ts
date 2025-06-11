@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { cartItemSchema } from "../schema";
-import { v4 as uuid } from "uuid";
 import prisma from "../prisma";
-import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -21,7 +18,7 @@ const getMyCart = async (
 
         const cart = await prisma.cart.findMany({
             where: {
-                id: userId
+                idUn: userId
             }
         });
 
