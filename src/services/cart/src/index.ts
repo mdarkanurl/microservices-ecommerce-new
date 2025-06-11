@@ -5,6 +5,7 @@ import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { addToCart } from './controllers';
+import scheduleCrons from './events/onKeyExpires';
 // import './events/onKeyExpires';
 
 config();
@@ -48,4 +49,5 @@ app.use((err: ErrorRequestHandler, _req: Request, res: any, _next: NextFunction)
 const PORT = process.env.PORT || 4006;
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
+    scheduleCrons();
 });
