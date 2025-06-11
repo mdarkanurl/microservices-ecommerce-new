@@ -4,9 +4,8 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import { addToCart } from './controllers';
+import { addToCart, getMyCart } from './controllers';
 import scheduleCrons from './events/onKeyExpires';
-// import './events/onKeyExpires';
 
 config();
 
@@ -35,6 +34,7 @@ app.use(express.json());
 
 // routes
 app.post('/cart/add-to-cart', addToCart);
+app.get('/cart/me', getMyCart);
 
 // health check
 app.get('/api/health', (_req: Request, res: Response) => {
