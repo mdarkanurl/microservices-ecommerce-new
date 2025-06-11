@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { cartItemSchema } from "../schema";
 import { v4 as uuid } from "uuid";
-import redis from "../redis";
-// import { CART_TTL, INVENTORY_SERVICE_URL } from "../config";
-// import axios from "axios";
+import prisma from "../prisma";
+import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
 const addToCart = async (
     req: Request,
@@ -17,28 +18,38 @@ const addToCart = async (
             return;
         }
 
-        let userId = (req.cookies.userId as string) || null;
+        let userId = (req.cookies.guestUserId as string) || null;
 
         if(!userId) {
             userId = uuid();
 
             // set the session id to cookie
-            res.cookie('guest-user-id', userId);
+            res.cookie('guestUserId', userId);
         }
 
-        const cartData = {
-            items: [
-                {
-                    productId: parsedBody.data.productId, inventoryId: parsedBody.data.inventoryId, quantity: 2
-                }
-            ],
-            userId: userId
-        };
+        // check if product available
+        const product = await axios.get(
+            `${process.env.PRODUCT_SERVICE_URL}/products/${parsedBody.data.productId}`
+        );
 
-        await redis.set(`guest-user-id:${userId}`, JSON.stringify(cartData), {
-            EX: 60
+        if(product.data.stock < parsedBody.data.quantity) {
+            res.status(400).json({ message: `${parsedBody.data.quantity} amount of product doesn\'t available` });
+            return;
+        }
+
+        await prisma.cart.create({
+            data: {
+                productId: parsedBody.data.productId,
+                inventoryId: parsedBody.data.inventoryId,
+                quantity: parsedBody.data.quantity
+            }
         });
-        
+
+        await axios.put(`${process.env.INVENTORY_SERVICE_URL}/inventories/${parsedBody.data.inventoryId}`, {
+            quantity: parsedBody.data.quantity,
+            actionType: 'OUT'
+        });
+
         res.status(201).json({ message: 'Item added to cart', userId });
         return;
     } catch (error) {
